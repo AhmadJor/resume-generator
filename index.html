@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en"> 
+    <head>
+        <meta charset="UTF-8"/>
+        <metahttp-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+        
+        <script src="script.js"></script>
+        <link rel="stylesheet" href="style.css"/>
+
+        <title> Resume Builder Web Application </title>
+
+    </head>
+    <body>
+     <div class="container" id="cv-form">
+        <h1 class="text-center my-4">Resume Generator</h1>
+        <p class="text-center my-4">Welcome to my professional resume generator website, designed and developed by Ahmad Jorban! </p>
+        <div class="row">
+
+            <!--  -->
+        
+            <h3>Personal Information</h3>
+            <div class="form-group">
+                <label for="nameField">Full Name</label>
+                <input type="text" id="nameField" placeholder="Enter your full name" class="form-control" />
+            </div>
+            
+            <div class="form-group mt-2">
+                <label for="emailField">Email Address</label>
+                <input type="email" id="emailField" placeholder="Enter your email address" class="form-control" />
+            </div>
+            
+            <div class="form-group mt-2">
+                <label for="phoneField">Phone Number</label>
+                <input type="tel" id="phoneField" placeholder="Enter your phone number" class="form-control" />
+            </div>
+                     
+            <div class="form-group mt-2">
+                <label for="linkedField">LinkedIn Profile URL</label>
+                <input type="url" id="linkedField" placeholder="Enter your LinkedIn profile URL" class="form-control" />
+            </div>
+            
+            <div class="form-group mt-2">
+                <label for="githubField">GitHub Profile URL</label>
+                <input type="url" id="githubField" placeholder="Enter your GitHub profile URL" class="form-control" />
+            </div>
+            
+            <br>
+            <br>
+            
+            <h3>Professional Information</h3>
+            
+            <div id="experienceGroups">
+                <div class="experience-group">
+                    <div class="form-group mt-2">
+                        <label for="experienceField">Work Experience</label>
+                        <textarea name="experience[]" placeholder="Enter your work experience" class="form-control" rows="5"></textarea>
+                    </div>
+                    
+                    <div class="form-group mt-2">
+                        <label for="dateField">Date Range of Work Experience</label>
+                        <input type="text" name="date[]" placeholder="Enter the date range of your work experience" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group mt-2">
+                <button type="button" class="btn btn-primary" onclick="addExperience()">Add Work Experience</button>
+            </div>
+            
+            <div id="skillGroups">
+                <div class="skill-group">
+                    <div class="form-group mt-2">
+                        <label for="skillsField">Skills</label>
+                        <textarea name="skills[]" placeholder="Enter your skills" class="form-control" rows="5"></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group mt-2">
+                <button type="button" class="btn btn-primary" onclick="addSkill()">Add Skill</button>
+            </div>
+            <br>
+
+            <div class="form-group mt-2">
+                <center> <button id="button" class="btn btn-primary">Generate PDF</button> </center>
+            </div>
+    </body>
+    <script src="jsPDF-1.3.2\dist\jspdf.umd.min.js"></script>
+    <script>
+  const name = document.querySelector('#nameField').value;
+  const email = document.querySelector('#emailField').value;
+  const phone = document.querySelector('#phoneField').value;
+  const linkedin = document.querySelector('#linkedField').value;
+  const github = document.querySelector('#githubField').value;
+//   const objective = document.querySelector('#objectiveField').value;
+
+  const experienceSections = document.querySelectorAll('.experience-section');
+  const experiences = [];
+  experienceSections.forEach(section => {
+    const experience = {
+      company: section.querySelector('.company-field').value,
+      position: section.querySelector('.position-field').value,
+      startDate: section.querySelector('.start-date-field').value,
+      endDate: section.querySelector('.end-date-field').value,
+      description: section.querySelector('.description-field').value,
+    };
+    experiences.push(experience);
+  });
+
+  const skillSections = document.querySelectorAll('.skill-section');
+  const skills = [];
+  skillSections.forEach(section => {
+    const skill = {
+      name: section.querySelector('.skill-name-field').value,
+      proficiency: section.querySelector('.skill-proficiency-field').value,
+    };
+    skills.push(skill);
+  });
+
+  const projectSections = document.querySelectorAll('.project-section');
+  const projects = [];
+  projectSections.forEach(section => {
+    const project = {
+      name: section.querySelector('.project-name-field').value,
+      description: section.querySelector('.project-description-field').value,
+    };
+    projects.push(project);
+  });
+
+  const doc = new jsPDF();
+  doc.text(`Name: ${name}`, 10, 10);
+  doc.text(`Contact: ${contact}`, 10, 20);
+  doc.text(`Email: ${email}`, 10, 30);
+  doc.text(`Phone: ${phone}`, 10, 40);
+  doc.text(`LinkedIn: ${linkedin}`, 10, 50);
+  doc.text(`GitHub: ${github}`, 10, 60);
+  doc.text(`Objective: ${objective}`, 10, 70);
+
+  let y = 90;
+  experiences.forEach(experience => {
+    doc.text('Experience', 10, y);
+    doc.text(`Company: ${experience.company}`, 10, y + 10);
+    doc.text(`Position: ${experience.position}`, 10, y + 20);
+    doc.text(`Start Date: ${experience.startDate}`, 10, y + 30);
+    doc.text(`End Date: ${experience.endDate}`, 10, y + 40);
+    doc.text(`Description: ${experience.description}`, 10, y + 50);
+    y += 70;
+  });
+
+  doc.text('Skills', 10, y);
+  skills.forEach(skill => {
+    doc.text(`Name: ${skill.name}`, 10, y + 10);
+    doc.text(`Proficiency: ${skill.proficiency}`, 10, y + 20);
+    y += 40;
+  });
+
+  doc.text('Projects', 10, y);
+  projects.forEach(project => {
+    doc.text(`Name: ${project.name}`, 10, y + 10);
+    doc.text(`Description: ${project.description}`, 10, y + 20);
+    y += 40;
+  });
+
+  const outputFilename = 'my-resume.pdf';
+  fs.writeFile(outputFilename, doc.output('blob'), (err) => {
+    if (err) {
+      console.error('Error while generating the PDF: ', err);
+      } else {
+      console.log('PDF generated successfully!');
+      }
+      });
+      
+    </script>
+</html>
