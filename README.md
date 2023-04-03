@@ -15,3 +15,7 @@ Open the index.html file in your web browser.
 
 ## Contributing
 We welcome contributions from the community! If you have any ideas for improving the Resume Generator or want to report a bug, please open an issue or submit a pull request.
+
+![Image 1](./p1.jpg)
+![Image 2](./p2.jpg)
+![Image 3](./p3.jpg)
