@@ -1,31 +1,22 @@
 
 function addExperience() {
-    var experienceGroup = document.createElement("div");
-    experienceGroup.className = "experience-group";
-    experienceGroup.innerHTML = `
-        <div class="form-group mt-2">
-            <label for="experienceField">Work Experience</label>
-            <textarea name="experience[]" placeholder="Enter your work experience" class="form-control" rows="5"></textarea>
-        </div>
+  const experienceList = document.getElementById('experience-list');
+  const experienceSection = document.querySelector('.experience-section');
 
-<div class="form-group mt-2">
-<label for="dateField">Date Range of Work Experience</label>
-<input type="text" name="date[]" placeholder="Enter the date range of your work experience" class="form-control" />
-</div>
+  // clone the first experience section element
+  const newExperienceSection = experienceSection.cloneNode(true);
 
-<div class="form-group mt-2">
-<button type="button" class="btn btn-danger" onclick="removeExperience(this)">Remove Work Experience</button>
-</div>
-`;
+  // clear the input fields
+  const inputFields = newExperienceSection.querySelectorAll('.form-control');
+  inputFields.forEach(field => field.value = '');
 
-var experienceGroups = document.getElementById("experienceGroups");
-experienceGroups.appendChild(experienceGroup);
+  // add the new experience section to the list
+  experienceList.appendChild(newExperienceSection);
 }
 
 function removeExperience(button) {
-var experienceGroup = button.parentNode.parentNode;
-var experienceGroups = document.getElementById("experienceGroups");
-experienceGroups.removeChild(experienceGroup);
+  const experienceSection = button.parentNode;
+  experienceSection.parentNode.removeChild(experienceSection);
 }
 
 function addSkill() {

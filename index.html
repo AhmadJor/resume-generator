@@ -51,24 +51,98 @@
             <br>
             
             <h3>Professional Information</h3>
-            
-            <div id="experienceGroups">
-                <div class="experience-group">
-                    <div class="form-group mt-2">
-                        <label for="experienceField">Work Experience</label>
-                        <textarea name="experience[]" placeholder="Enter your work experience" class="form-control" rows="5"></textarea>
-                    </div>
-                    
-                    <div class="form-group mt-2">
-                        <label for="dateField">Date Range of Work Experience</label>
-                        <input type="text" name="date[]" placeholder="Enter the date range of your work experience" class="form-control" />
-                    </div>
-                </div>
+        
+            <div class="form-group">
+              <label for="objectiveField">Objective</label>
+              <textarea class="form-control" id="objectiveField" rows="3"></textarea>
             </div>
-            
-            <div class="form-group mt-2">
-                <button type="button" class="btn btn-primary" onclick="addExperience()">Add Work Experience</button>
-            </div>
+<!-- Education Section -->
+<div class="form-group">
+  <h3>Education</h3>
+  <div class="education-section">
+    <div class="education-section form-group">
+      <label for="education-name-field">Name:</label>
+      <input type="text" id="education-name-field" class="form-control">
+      <label for="education-degree-field">Degree:</label>
+      <input type="text" id="education-degree-field" class="form-control">
+      <label for="education-start-date-field">Start Date:</label>
+      <input type="date" id="education-start-date-field" class="form-control">
+      <label for="education-end-date-field">End Date:</label>
+      <input type="date" id="education-end-date-field" class="form-control">
+      <label for="education-courses-field">Courses:</label>
+      <textarea id="education-courses-field" class="form-control"></textarea>
+    </div>
+  </div>
+
+</div>
+
+<div class="form-group">
+  <h3>Academic Projects</h3>
+  <div class="academic-projects-section">
+   <!-- Academic Projects Section -->
+<div class="academic-projects-section form-group">
+  <label for="academic-projects-name-field">Name:</label>
+  <input type="text" id="academic-projects-name-field" class="form-control">
+  <label for="academic-projects-start-date-field">Start Date:</label>
+  <input type="date" id="academic-projects-start-date-field" class="form-control">
+  <label for="academic-projects-end-date-field">End Date:</label>
+  <input type="date" id="academic-projects-end-date-field" class="form-control">
+  <label for="academic-projects-description-field">Description:</label>
+  <textarea id="academic-projects-description-field" class="form-control"></textarea>
+  <label for="academic-projects-grade-field">Grade:</label>
+  <input type="text" id="academic-projects-grade-field" class="form-control">
+  <label for="academic-projects-link-field">Link:</label>
+  <input type="text" id="academic-projects-link-field" class="form-control">
+</div>
+  </div>
+</div>
+
+<div class="work-experience-section form-group">
+  <h3>Work Experience</h3>
+  <div id="experience-list">
+    <div class="experience-section">
+      <label>Company:</label>
+      <input type="text" class="experience-company-field form-control">
+      <br>
+      <label>Position:</label>
+      <input type="text" class="experience-position-field form-control">
+      <br>
+      <label>Start Date:</label>
+      <input type="text" class="experience-start-date-field form-control">
+      <br>
+      <label>End Date:</label>
+      <input type="text" class="experience-end-date-field form-control">
+      <br>
+      <label>Description:</label>
+      <textarea class="experience-description-field form-control"></textarea>
+      <br>
+      <button class="btn btn-danger" onclick="removeExperience(this)">Remove</button>
+    </div>
+  </div>
+  <button type="button" class="btn btn-primary mt-2" onclick="addExperience()">Add Work Experience</button>
+</div>
+            <script>
+              function addExperience() {
+  const experienceList = document.getElementById('experience-list');
+  const experienceSection = document.querySelector('.experience-section');
+
+  // clone the first experience section element
+  const newExperienceSection = experienceSection.cloneNode(true);
+
+  // clear the input fields
+  const inputFields = newExperienceSection.querySelectorAll('.form-control');
+  inputFields.forEach(field => field.value = '');
+
+  // add the new experience section to the list
+  experienceList.appendChild(newExperienceSection);
+}
+
+function removeExperience(button) {
+  const experienceSection = button.parentNode;
+  experienceSection.parentNode.removeChild(experienceSection);
+}
+
+            </script>
             
             <div id="skillGroups">
                 <div class="skill-group">
@@ -85,17 +159,57 @@
             <br>
 
             <div class="form-group mt-2">
-                <center> <button id="button" class="btn btn-primary">Generate PDF</button> </center>
+                <center> <button id="button" class="btn btn-primary" onclick="generatePDF()">Generate PDF</button> </center>
             </div>
-    </body>
-    <script src="jsPDF-1.3.2\dist\jspdf.umd.min.js"></script>
-    <script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-qZvrmS2ekKPF2mSznTQsxqPgnpkI4DNTlrdUmTzrDgektczlKNRRhy5X5AAOnx5S09ydFYWWNSfcEqDTTHgtNA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  
+  <script>
+function generatePDF(){
+  window.jsPDF = window.jspdf.jsPDF;
   const name = document.querySelector('#nameField').value;
   const email = document.querySelector('#emailField').value;
   const phone = document.querySelector('#phoneField').value;
   const linkedin = document.querySelector('#linkedField').value;
   const github = document.querySelector('#githubField').value;
-//   const objective = document.querySelector('#objectiveField').value;
+  const objective = document.querySelector('#objectiveField').value;
+
+  const educationSections = document.querySelectorAll('.education-section');
+  const education = [];
+  educationSections.forEach(section => {
+    const item = {
+      institution: section.querySelector('.institution-field').value,
+      degree: section.querySelector('.degree-field').value,
+      major: section.querySelector('.major-field').value,
+      startDate: section.querySelector('.start-date-field').value,
+      endDate: section.querySelector('.end-date-field').value,
+      description: section.querySelector('.description-field').value,
+    };
+    education.push(item);
+  });
+
+  const projectSections = document.querySelectorAll('.project-section');
+  const projects = [];
+  projectSections.forEach(section => {
+    const project = {
+      name: section.querySelector('.project-name-field').value,
+      description: section.querySelector('.project-description-field').value,
+      link: section.querySelector('.project-link-field').value,
+      startDate: section.querySelector('.project-start-date-field').value,
+      endDate: section.querySelector('.project-end-date-field').value,
+    };
+    projects.push(project);
+  });
+
+  const skillSections = document.querySelectorAll('.skill-section');
+  const skills = [];
+  skillSections.forEach(section => {
+    const skill = {
+      name: section.querySelector('.skill-name-field').value,
+      proficiency: section.querySelector('.skill-proficiency-field').value,
+    };
+    skills.push(skill);
+  });
 
   const experienceSections = document.querySelectorAll('.experience-section');
   const experiences = [];
@@ -110,68 +224,158 @@
     experiences.push(experience);
   });
 
-  const skillSections = document.querySelectorAll('.skill-section');
-  const skills = [];
-  skillSections.forEach(section => {
-    const skill = {
-      name: section.querySelector('.skill-name-field').value,
-      proficiency: section.querySelector('.skill-proficiency-field').value,
+  const languageSections = document.querySelectorAll('.language-section');
+  const languages = [];
+  languageSections.forEach(section => {
+    const language = {
+      name: section.querySelector('.language-name-field').value,
+      proficiency: section.querySelector('.language-proficiency-field').value,
     };
-    skills.push(skill);
-  });
-
-  const projectSections = document.querySelectorAll('.project-section');
-  const projects = [];
-  projectSections.forEach(section => {
-    const project = {
-      name: section.querySelector('.project-name-field').value,
-      description: section.querySelector('.project-description-field').value,
-    };
-    projects.push(project);
+    languages.push(language);
   });
 
   const doc = new jsPDF();
-  doc.text(`Name: ${name}`, 10, 10);
-  doc.text(`Contact: ${contact}`, 10, 20);
-  doc.text(`Email: ${email}`, 10, 30);
-  doc.text(`Phone: ${phone}`, 10, 40);
-  doc.text(`LinkedIn: ${linkedin}`, 10, 50);
-  doc.text(`GitHub: ${github}`, 10, 60);
-  doc.text(`Objective: ${objective}`, 10, 70);
 
-  let y = 90;
-  experiences.forEach(experience => {
-    doc.text('Experience', 10, y);
-    doc.text(`Company: ${experience.company}`, 10, y + 10);
-    doc.text(`Position: ${experience.position}`, 10, y + 20);
-    doc.text(`Start Date: ${experience.startDate}`, 10, y + 30);
-    doc.text(`End Date: ${experience.endDate}`, 10, y + 40);
-    doc.text(`Description: ${experience.description}`, 10, y + 50);
-    y += 70;
-  });
+ // Add personal information
+doc.setFontSize(16);
+doc.text(`${name}`, 15, 25);
+doc.setFontSize(12);
+doc.text(`Phone Number - ${phone}`, 15, 35);
+doc.text(`LinkedIn: ${linkedin}`, 15, 45);
+doc.text(`Email: ${email}`, 15, 55);
+doc.text(`GitHub: ${github}`, 15, 65);
 
-  doc.text('Skills', 10, y);
-  skills.forEach(skill => {
-    doc.text(`Name: ${skill.name}`, 10, y + 10);
-    doc.text(`Proficiency: ${skill.proficiency}`, 10, y + 20);
-    y += 40;
-  });
+// Add objective
+doc.setFontSize(14);
+doc.text('Objective', 15, 85);
+doc.setFontSize(12);
+doc.text(`${objective}`, 15, 95);
 
-  doc.text('Projects', 10, y);
-  projects.forEach(project => {
-    doc.text(`Name: ${project.name}`, 10, y + 10);
-    doc.text(`Description: ${project.description}`, 10, y + 20);
-    y += 40;
-  });
+// Add education
+doc.setFontSize(14);
+doc.text('Education', 15, 125);
+doc.setFontSize(12);
+education.forEach((item, index) => {
+  doc.text(`${item.name} - ${item.degree}`, 15, 135 + (index * 30));
+  doc.text(`${item.startDate} - ${item.endDate}`, 15, 145 + (index * 30));
+  doc.text(`Relevant Courses:`, 15, 155 + (index * 30));
+  doc.text(`${item.courses}`, 15, 165 + (index * 30));
+});
 
-  const outputFilename = 'my-resume.pdf';
-  fs.writeFile(outputFilename, doc.output('blob'), (err) => {
-    if (err) {
-      console.error('Error while generating the PDF: ', err);
-      } else {
-      console.log('PDF generated successfully!');
-      }
-      });
+// Add academic projects
+doc.setFontSize(14);
+doc.text('Academic Projects', 15, 265);
+doc.setFontSize(12);
+academicProjects.forEach((item, index) => {
+  doc.text(`${item.name} (${item.grade})`, 15, 275 + (index * 50));
+  doc.text(`${item.startDate} - ${item.endDate}`, 15, 285 + (index * 50));
+  doc.text(`${item.description}`, 15, 295 + (index * 50));
+  doc.text(`Link: ${item.link}`, 15, 305 + (index * 50));
+});
+
+// Add technical skills
+doc.setFontSize(14);
+doc.text('Technical Skills', 15, 445);
+
+
+// Add experience
+doc.setFontSize(14);
+doc.text('Experience', 15, 505);
+
+
+// Add languages
+doc.setFontSize(14);
+doc.text('Languages', 15, 565);
+doc.setFontSize(12);
+doc.text(`- Arabic: Mother tongue`, 15, 575);
+doc.text(`- Hebrew: Fluent`, 15, 585);
+doc.text(`- English: Fluent`, 15, 595);
+
+// Save the PDF
+doc.save('resume.pdf');
+
+    }
+//     function generatePDF(){
+//       window.jsPDF = window.jspdf.jsPDF;
+//     const name = document.querySelector('#nameField').value;
+//   const email = document.querySelector('#emailField').value;
+//   const phone = document.querySelector('#phoneField').value;
+//   const linkedin = document.querySelector('#linkedField').value;
+//   const github = document.querySelector('#githubField').value;
+// //   const objective = document.querySelector('#objectiveField').value;
+
+//   const experienceSections = document.querySelectorAll('.experience-section');
+//   const experiences = [];
+//   experienceSections.forEach(section => {
+//     const experience = {
+//       company: section.querySelector('.company-field').value,
+//       position: section.querySelector('.position-field').value,
+//       startDate: section.querySelector('.start-date-field').value,
+//       endDate: section.querySelector('.end-date-field').value,
+//       description: section.querySelector('.description-field').value,
+//     };
+//     experiences.push(experience);
+//   });
+
+//   const skillSections = document.querySelectorAll('.skill-section');
+//   const skills = [];
+//   skillSections.forEach(section => {
+//     const skill = {
+//       name: section.querySelector('.skill-name-field').value,
+//       proficiency: section.querySelector('.skill-proficiency-field').value,
+//     };
+//     skills.push(skill);
+//   });
+
+//   const projectSections = document.querySelectorAll('.project-section');
+//   const projects = [];
+//   projectSections.forEach(section => {
+//     const project = {
+//       name: section.querySelector('.project-name-field').value,
+//       description: section.querySelector('.project-description-field').value,
+//     };
+//     projects.push(project);
+//   });
+
+//   const doc = new jsPDF();
+//   doc.text(`Name: ${name}`, 10, 10);
+//   //doc.text(`Contact: ${contact}`, 10, 20);
+//   doc.text(`Email: ${email}`, 10, 30);
+//   doc.text(`Phone: ${phone}`, 10, 40);
+//   doc.text(`LinkedIn: ${linkedin}`, 10, 50);
+//   doc.text(`GitHub: ${github}`, 10, 60);
+//   //doc.text(`Objective: ${objective}`, 10, 70);
+
+//   let y = 90;
+//   experiences.forEach(experience => {
+//     doc.text('Experience', 10, y);
+//     doc.text(`Company: ${experience.company}`, 10, y + 10);
+//     doc.text(`Position: ${experience.position}`, 10, y + 20);
+//     doc.text(`Start Date: ${experience.startDate}`, 10, y + 30);
+//     doc.text(`End Date: ${experience.endDate}`, 10, y + 40);
+//     doc.text(`Description: ${experience.description}`, 10, y + 50);
+//     y += 70;
+//   });
+
+//   doc.text('Skills', 10, y);
+//   skills.forEach(skill => {
+//     doc.text(`Name: ${skill.name}`, 10, y + 10);
+//     doc.text(`Proficiency: ${skill.proficiency}`, 10, y + 20);
+//     y += 40;
+//   });
+
+//   doc.text('Projects', 10, y);
+//   projects.forEach(project => {
+//     doc.text(`Name: ${project.name}`, 10, y + 10);
+//     doc.text(`Description: ${project.description}`, 10, y + 20);
+//     y += 40;
+//   });
+
+//  doc.save("resume-test");
+//     }
+   
+
       
     </script>
+    </body>
 </html>
