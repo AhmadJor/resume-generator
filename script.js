@@ -127,8 +127,12 @@ function generatePDF() {
     doc.setFontSize(12);
     yPos += 10;
     const objectiveLines = doc.splitTextToSize(objective, 180);
-    doc.text(objectiveLines, 10, yPos);
-    yPos += objectiveLines.length * 12 + 10;
+    console.log('objectiveLines:', objectiveLines);
+    const nonEmptyLines = objectiveLines.filter(line => line.trim() !== '');
+    const objectiveText = nonEmptyLines.join("\n");
+    doc.text(objectiveText, 10, yPos);
+    yPos += nonEmptyLines.length * 8;
+    
     
     // add education section
     doc.setFontSize(16);
@@ -154,17 +158,23 @@ function generatePDF() {
     doc.line(10, yPos, 200, yPos);
     doc.setFontSize(12);
     yPos += 10;
-    const projectDescriptionHeight = 15;
+    const projectDescriptionHeight = 10;
+    const descriptionWidth = 180;
+    const descriptionFontSize = 12;
+    
     for (let i = 0; i < academicProjects.length; i++) {
       const pro = academicProjects[i];
+      const descriptionLines = doc.splitTextToSize(pro.description, descriptionWidth);
       doc.text(pro.name + ":", 10, yPos);
-      doc.text(" - " + pro.description, 20, yPos + 10);
-      doc.text("you can find this project in this link : " + pro.link, 10, yPos + 20);
-      const descriptionLines = doc.splitTextToSize(pro.description, 180);
+      doc.setFontSize(descriptionFontSize);
+      const descriptionText = descriptionLines.join("\n");
+      doc.text(descriptionText + "\nyou can find this project in this link : " + pro.link, 20, yPos + 10);
       const descriptionHeight = descriptionLines.length * projectDescriptionHeight;
-      yPos += descriptionHeight + 20;
+      yPos += descriptionHeight + 10;
       yPos = checkPage(doc, yPos);
     }
+    
+    
     yPos += 10;
     yPos = checkPage(doc, yPos);
     // add experience section
