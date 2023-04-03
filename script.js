@@ -97,117 +97,147 @@ function generatePDF() {
     academicProjects.push({ name, description, link });
   }
 
-  // add data to pdf
-  doc.setFontSize(16);
-  doc.text("Personal information", 10, 10);
-  doc.setLineWidth(0.5);
-  doc.line(10, 10 + 2, 10 + 200, 10 + 2);
-  doc.setFontSize(12);
-  doc.text("Full name - " + name, 20, 20);
-  doc.text("Email Address - " + email, 20, 30);
-  doc.text("Phone number" + phone, 20, 40);
-  doc.text("Linkedin -" + linkedIn, 20, 50);
-  doc.text("GitHub - " + github, 20, 60);
-  doc.setFontSize(16);
-  doc.text("About me", 10, 80);
-  doc.setLineWidth(0.5);
-  doc.line(10, 80 + 2, 10 + 200, 80 + 2);
-  doc.setFontSize(12);
-  doc.text(objective, 10, 90);
-  // make it depending on the objective length
-  const objectiveLines = doc.splitTextToSize(objective, 200);
-  const objectiveHeight = objectiveLines.length * 12;
-  doc.text(objectiveLines, 10, 90 + objectiveHeight);
-  doc.setFontSize(16);
-  doc.text("Education", 10, 110 + objectiveHeight);
-  doc.setLineWidth(0.5);
-  doc.line(10, 110 + 2 + objectiveHeight, 10 + 200, 110 + 2 + objectiveHeight);
-  // add education details
-  let yPos = 120 + objectiveHeight;
-  for (let i = 0; i < education.length; i++) {
-    const edu = education[i];
-    doc.text(edu.name, 10, yPos);
-    doc.text(" - " + edu.degree, 24, yPos);
-    doc.text(edu.startDate + " - " + edu.endDate, 160, yPos);
-    yPos += 12;
-  }
-  doc.setFontSize(16);
-  yPos += 10;
-  doc.text("Projects", 10, yPos);
-  doc.setLineWidth(0.5);
-  doc.line(10, yPos + 2, 10 + 200, yPos + 2);
-  yPos += 10;
-  doc.setFontSize(12);
-  const projectDescriptionHeight = 15; // adjust this value as needed
-  for (let i = 0; i < academicProjects.length; i++) {
-    const pro = academicProjects[i];
-    doc.text(pro.name + ":", 10, yPos);
-    doc.text(" - " + pro.description, 10, yPos + 10);
-    doc.text("you can find this project in this link : " + pro.link, 10, yPos + 20);
-    yPos += projectDescriptionHeight;
-  }
-  doc.setFontSize(16);
-yPos += 20;
-doc.text("Experience", 10, yPos);
-doc.setLineWidth(0.5);
-doc.line(10, yPos + 2, 10 + 200, yPos + 2);
-yPos += 10;
-const experienceDescriptionHeight = 15; // adjust this value as needed
+    let yPos = 10;
+  
+    // add personal information section
+    doc.setFontSize(16);
+    doc.text("Personal information", 10, yPos);
+    doc.setLineWidth(0.5);
+    yPos += 5;
+    doc.line(10, yPos, 200, yPos);
+    doc.setFontSize(12);
+    yPos += 10;
+    doc.text("Full name - " + name, 20, yPos);
+    yPos += 10;
+    doc.text("Email Address - " + email, 20, yPos);
+    yPos += 10;
+    doc.text("Phone number - " + phone, 20, yPos);
+    yPos += 10;
+    doc.text("LinkedIn - " + linkedIn, 20, yPos);
+    yPos += 10;
+    doc.text("GitHub - " + github, 20, yPos);
+    yPos += 20;
+    
+    // add about me section
+    doc.setFontSize(16);
+    doc.text("About me", 10, yPos);
+    doc.setLineWidth(0.5);
+    yPos += 5;
+    doc.line(10, yPos, 200, yPos);
+    doc.setFontSize(12);
+    yPos += 10;
+    const objectiveLines = doc.splitTextToSize(objective, 180);
+    doc.text(objectiveLines, 10, yPos);
+    yPos += objectiveLines.length * 12 + 10;
+    
+    // add education section
+    doc.setFontSize(16);
+    doc.text("Education", 10, yPos);
+    doc.setLineWidth(0.5);
+    yPos += 5;
+    doc.line(10, yPos, 200, yPos);
+    yPos += 10;
+    doc.setFontSize(12);
+    for (let i = 0; i < education.length; i++) {
+      const edu = education[i];
+      doc.text(edu.name+ " - " + edu.degree, 10, yPos);
+      doc.text(edu.startDate + " - " + edu.endDate, 160, yPos);
+      yPos += 12;
+    }
+    yPos += 10;
+    yPos = checkPage(doc, yPos);
+    // add projects section
+    doc.setFontSize(16);
+    doc.text("Projects", 10, yPos);
+    doc.setLineWidth(0.5);
+    yPos += 5;
+    doc.line(10, yPos, 200, yPos);
+    doc.setFontSize(12);
+    yPos += 10;
+    const projectDescriptionHeight = 15;
+    for (let i = 0; i < academicProjects.length; i++) {
+      const pro = academicProjects[i];
+      doc.text(pro.name + ":", 10, yPos);
+      doc.text(" - " + pro.description, 20, yPos + 10);
+      doc.text("you can find this project in this link : " + pro.link, 10, yPos + 20);
+      const descriptionLines = doc.splitTextToSize(pro.description, 180);
+      const descriptionHeight = descriptionLines.length * projectDescriptionHeight;
+      yPos += descriptionHeight + 20;
+      yPos = checkPage(doc, yPos);
+    }
+    yPos += 10;
+    yPos = checkPage(doc, yPos);
+    // add experience section
+    doc.setFontSize(16);
+    doc.text("Experience", 10, yPos);
+    doc.setLineWidth(0.5);
+    yPos += 5;
+    doc.line(10, yPos , 10 + 200, yPos);
+    yPos += 10;
+    yPos = checkPage(doc, yPos);
+    // add experience details for each section
 const experienceSections = document.querySelectorAll('.experience-section');
 doc.setFontSize(12);
+const experienceDescriptionHeight = 15; // adjust this value as needed
+const maxWidth = 180; // adjust this value as needed
+
 experienceSections.forEach((section) => {
   const company = section.querySelector('.experience-company-field').value;
   const position = section.querySelector('.experience-position-field').value;
   const startDate = section.querySelector('.experience-start-date-field').value;
   const endDate = section.querySelector('.experience-end-date-field').value;
   const description = section.querySelector('.experience-description-field').value;
-  doc.text(company, 10, yPos);
-  doc.text(position, 24, yPos);
-  doc.text(startDate + " - " + endDate, 160, yPos);
-  doc.text(description, 10, yPos + 10);
   
-  const descriptionLines = doc.splitTextToSize(description, 180); // adjust width as needed
+  // calculate the height of the description
+  const descriptionLines = doc.splitTextToSize(description, maxWidth);
   const descriptionHeight = descriptionLines.length * experienceDescriptionHeight;
-  yPos += descriptionHeight + 15; // add 15 units for additional spacing
+  
+  yPos = checkPage(doc, yPos);
+  
+  // add the details to the pdf
+  doc.text(company + " | " + position, 10, yPos);
+  doc.text(startDate + " - " + endDate, 160, yPos);
+  
+  // add the description one line at a time
+  descriptionLines.forEach((line) => {
+    doc.text(line, 10, yPos + 5);
+    yPos += 5;
+    yPos = checkPage(doc, yPos);
+  });
+  
+  yPos += 10; // add additional spacing between sections
 });
-const skills = document.querySelectorAll('#skillGroups textarea[name="skills[]"]');
+
+// add skills section
 doc.setFontSize(16);
-yPos += 10;
 doc.text("Skills", 10, yPos);
 doc.setLineWidth(0.5);
-doc.line(10, yPos + 2, 10 + 200, yPos + 2);
-doc.setFontSize(12);
+yPos += 5;
+doc.line(10, yPos, 10 + 200, yPos);
 yPos += 10;
-let x = 10;
-for (let i = 0; i < skills.length; i++) {
-  const skill = skills[i].value;
-  doc.text(skill+",", x+10, yPos);
-}
+
+// add skills details
+const skillGroup = document.querySelector('#skillGroups');
+const skillTextArea = skillGroup.querySelector('textarea');
+const skill = skillTextArea.value;
+
+doc.setFontSize(12);
+doc.text(skill, 20, yPos);
+
+
 
   doc.save("resume");
 }
 
 
-function addSkill() {
-  var skillGroup = document.createElement("div");
-  skillGroup.className = "skill-group";
-  skillGroup.innerHTML = `
-      <div class="form-group mt-2">
-          <label for="skillsField">Skills</label>
-          <textarea name="skills[]" placeholder="Enter your skills" class="form-control" rows="5"></textarea>
-      </div>
-      
-      <div class="form-group mt-2">
-          <button type="button" class="btn btn-danger" onclick="removeSkill(this)">Remove Skill</button>
-      </div>
-  `;
-  
-  var skillGroups = document.getElementById("skillGroups");
-  skillGroups.appendChild(skillGroup);
-}
+function checkPage(doc, currentY) {
+  const pageHeight = doc.internal.pageSize.height;
+  const contentHeight = currentY + 20; // add some padding at the bottom
 
-function removeSkill(button) {
-  var skillGroup = button.parentNode.parentNode;
-  var skillGroups = document.getElementById("skillGroups");
-  skillGroups.removeChild(skillGroup);
+  if (contentHeight >= pageHeight) {
+    doc.addPage();
+    return 20; // start writing from top of new page
+  } else {
+    return currentY;
+  }
 }
